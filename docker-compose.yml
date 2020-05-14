@@ -1,0 +1,31 @@
+verison: '3'
+services:
+    consul:
+      build:
+        dockerfile: ./consul/Dockerfile
+        image: consul:custom
+      container_name: consul
+      ports:
+        - "8500:8500"
+      environment:
+        CONSUL_LOCAL_CONFIG: {"skip_leave_on_interrupt": true}
+      restart: always
+      volumes:
+        - /consul/data:/consul/data
+    vault:
+      build:
+        dockerfile: ./vault/Dockerfile
+        image: vault:custom
+      container_name: vault
+      environment:
+        - VAULT_ADDR=http://127.0.0.1:8200
+      cap_add:
+        - IPC_LOCK
+      depends_on:
+        - consul
+      ports:
+        - "8200:8200"
+      restart: always
+      volumes:
+        - /vault/config:/vault/config
+        - /vault/data:/vault/data
