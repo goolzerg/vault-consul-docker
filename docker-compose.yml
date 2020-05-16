@@ -13,6 +13,7 @@ services:
         - "8600:8600/udp"
       restart: always
       command: "consul agent -server -dns-port=53 -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0 -config-file=/consul/config/consul-config.json"
+      command: agent -server -bind 0.0.0.0 -client 0.0.0.0 -bootstrap-expect 1 -config-file=/consul/config/config.json
     vault:
       build:
         context: ./vault/
@@ -27,6 +28,6 @@ services:
       ports:
         - "8200:8200"
       restart: always
-      command: "vault server -config=/vault/config/vault-config.json"
+      command: "vault server -config=/vault/config/vault-config.hcl"
 volumes:
     consul_data:
